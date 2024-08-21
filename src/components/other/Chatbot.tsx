@@ -1,3 +1,5 @@
+"use client"
+
 import {
     Card,
     CardContent,
@@ -6,17 +8,19 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Message, useChat } from 'ai/react'
-
-const messages = [
-    { message: "Hello! How can I assist you today?" },
-    { message: "What are some good topics to learn today?" },
-]
+import { useChat, Message } from 'ai/react';
 
 export function Chatbot() {
-    const { messages, input, handleInputChange, handleSubmit, setMessages } = useChat({
-        keepLastMessageOnError: true
-    });
+    const { messages, input, handleInputChange, handleSubmit } = useChat({
+        keepLastMessageOnError: true,
+        initialMessages: [
+            {
+                role: "assistant",
+                content: "WHAT happened?",
+                id: 'hello'
+            } satisfies Message
+        ]
+      });
 
     return (
         <>
