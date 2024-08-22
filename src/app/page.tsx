@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/resizable"
 import { useState, useEffect } from 'react'
 
-export enum MeTypes {
+enum MeTypes {
   Quiz,
   Teach
 }

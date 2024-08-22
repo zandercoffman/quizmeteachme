@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/drawer"
 import { Button } from "@/components/ui/button"
 import { TabsDemo } from "./other/Tabs"
-import { MeTypes } from "@/app/page"
 import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react"
 import { ArrowLeftRight, BookOpen, BookOpenCheck, Clock, GraduationCap, Loader, PenSquare, PlayCircle, Sparkles } from "lucide-react"
 import { Input } from "./ui/input"
@@ -38,6 +37,11 @@ import {
   RadialBarChart,
 } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+
+enum MeTypes {
+  Quiz,
+  Teach
+}
 
 const chartData = [{ month: "january", desktop: 1260, mobile: 570 }]
 

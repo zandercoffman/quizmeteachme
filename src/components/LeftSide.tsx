@@ -1,7 +1,7 @@
 "use client"
 import { BotMessageSquare, Info, User } from "lucide-react";
 import { Badge } from "./ui/badge";
-import { MeTypes } from "@/app/page";
+
 import {
     Dialog,
     DialogContent,
@@ -17,6 +17,11 @@ import { ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Markdown from 'react-markdown'
+
+enum MeTypes {
+    Quiz,
+    Teach
+  }
 
 export default function LeftSide({
     topic,
