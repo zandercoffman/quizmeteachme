@@ -29,41 +29,23 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import {
-  Label,
-  PolarGrid,
-  PolarRadiusAxis,
-  RadialBar,
-  RadialBarChart,
-} from "recharts"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import AnimatedCircularProgressBar from "@/components/magicui/animated-circular-progress-bar";
 
 enum MeTypes {
   Quiz,
   Teach
 }
 
-const chartData = [{ month: "january", desktop: 1260, mobile: 570 }]
-
-const chartConfig = {
-  desktop: {
-    label: "Incorrect",
-    color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Correct",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig
-
 export default function RightSide({
   setTopic,
+  topic,
   mode,
   setMode,
   setInStudy,
   inStudy
 }: {
   setTopic: Function,
+  topic: string,
   mode: MeTypes | null,
   setMode: Function,
   setInStudy: Function,
@@ -76,7 +58,7 @@ export default function RightSide({
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
           <p>Overview Tab</p>
-          <Overview mode={mode} setMode={setMode} setInStudy={setInStudy} inStudy={inStudy} />
+          <Overview mode={mode} setMode={setMode} setInStudy={setInStudy} inStudy={inStudy} topic={topic} setTopic={setTopic} />
         </div>
       ),
     },
@@ -157,12 +139,16 @@ const Overview = ({
   mode,
   setMode,
   setInStudy,
-  inStudy
+  inStudy,
+  topic,
+  setTopic
 }: {
   mode: MeTypes | null,
   setMode: Function,
   setInStudy: Function,
-  inStudy: boolean
+  inStudy: boolean,
+  topic: string,
+  setTopic: Function
 }) => {
 
   const recommendations = {
@@ -182,10 +168,15 @@ const Overview = ({
 
   const [cur, setCur] = useState<MeTypes | null>(mode);
   const [curbool, setCurBool] = useState<boolean>(inStudy);
+  const [curTopic, setCurTopic] = useState<string>(topic);
 
   useEffect(() => {
     setCur(mode);
   }, [mode])
+
+  useEffect(() => {
+    setCurTopic(topic);
+  }, [topic])
 
   useEffect(() => {
     setCurBool(inStudy);
@@ -203,7 +194,7 @@ const Overview = ({
           <div className="flex justify-between items-center">
             <div className="flex flex-row">
               {cur == MeTypes.Quiz ? <PenSquare className="mr-2" /> : <BookOpen className="mr-2" />}
-              <h1 className="text-base">{cur === MeTypes.Quiz ? 'Quiz' : 'Learn'}: {"Title"}</h1>
+              <h1 className="text-base">{cur === MeTypes.Quiz ? 'Quiz' : 'Learn'}: {curTopic}</h1>
             </div>
             <Button variant="secondary" size="sm" onClick={toggleMode}>
               <ArrowLeftRight className="mr-2 h-4 w-4" />
@@ -224,7 +215,8 @@ const Overview = ({
                         </span>
                       </AccordionTrigger>
                       <AccordionContent className="flex flex-row gap-2">
-                        <Chart />
+                        <AnimatedCircularProgressBar max={100} value={20} min={0} gaugePrimaryColor={"rgb(0, 255, 0)"} gaugeSecondaryColor={"rgb(255, 0, 0)"} caption={"# Right"}/>
+                        <AnimatedCircularProgressBar max={100} value={20} min={0} gaugePrimaryColor={"rgb(79 70 229)"} gaugeSecondaryColor={"rgba(0, 0, 0, 0.1)"} caption={"Hi"}/>
                       </AccordionContent>
                     </AccordionItem>
                   </>
@@ -292,7 +284,15 @@ const Overview = ({
           </div>
           <div className="flex mt-2 flex-row gap-3">
             <Input
-              placeholder="Enter your topic here.." />
+              placeholder="Enter your topic here.."
+              value={curTopic}
+              onChange={(e) => {
+                setTopic(e.target.value);
+                setCurTopic(e.target.value);
+              }}
+              className="text-black"
+            />
+
             <Button variant={"secondary"} onClick={() => {
               setInStudy(true);
               setCurBool(true)
@@ -311,66 +311,5 @@ const Overview = ({
         </div>
       </>
     }
-  </>
-}
-
-function Chart() {
-  return <>
-    <ChartContainer
-      config={chartConfig}
-      className=" aspect-square w-full max-w-[250px]"
-    >
-      <RadialBarChart
-        data={chartData}
-        endAngle={180}
-        innerRadius={80}
-        outerRadius={130}
-      >
-        <ChartTooltip
-          cursor={false}
-          content={<ChartTooltipContent hideLabel />}
-        />
-        <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-          <Label
-            content={({ viewBox }) => {
-              if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                return (
-                  <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
-                    <tspan
-                      x={viewBox.cx}
-                      y={(viewBox.cy || 0) - 16}
-                      className="fill-foreground text-2xl font-bold"
-                    >
-                      {chartData[0].mobile}
-                    </tspan>
-                    <tspan
-                      x={viewBox.cx}
-                      y={(viewBox.cy || 0) + 4}
-                      className="fill-muted-foreground"
-                    >
-                      Questions Right
-                    </tspan>
-                  </text>
-                )
-              }
-            }}
-          />
-        </PolarRadiusAxis>
-        <RadialBar
-          dataKey="desktop"
-          stackId="a"
-          cornerRadius={5}
-          fill="var(--color-desktop)"
-          className="stroke-transparent stroke-2"
-        />
-        <RadialBar
-          dataKey="mobile"
-          fill="var(--color-mobile)"
-          stackId="a"
-          cornerRadius={5}
-          className="stroke-transparent stroke-2"
-        />
-      </RadialBarChart>
-    </ChartContainer>
   </>
 }

@@ -38,7 +38,7 @@ export default function LeftSide({
         setIsStudying(inStudy)
     }, [inStudy])
 
-    const { messages, input, handleInputChange, handleSubmit } = useChat({
+    const { messages, input, handleInputChange, handleSubmit, setMessages } = useChat({
         keepLastMessageOnError: true,
         initialMessages: [
             {
@@ -53,6 +53,21 @@ export default function LeftSide({
             },
         ]
     });
+
+    useEffect(() => {
+        if (isStudying) {
+            const arr = [...messages];
+            arr.push(
+                {
+                    role: "assistant",
+                    content: "Great! Now, we will be able to begin studying. Start by asking me anything or find reccomendations.",
+                    id: '3'
+                } satisfies Message
+            )
+            setMessages(arr)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isStudying])
 
     return (
         <div className="flex flex-col gap-3 h-full mx-2">

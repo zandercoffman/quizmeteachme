@@ -38,6 +38,7 @@ export default function Home() {
           <div className="w-full lg:w-1/2 h-full">
             <RightSide
               setTopic={setTopic}
+              topic={topic}
               mode={mode}
               setMode={setMode} 
               setInStudy={setInStudy}
